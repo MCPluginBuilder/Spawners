@@ -8,7 +8,7 @@
 
     <name>Spawners</name>
     <description>The ultimate spawner plugin</description>
-    <version>1.22.0</version>
+    <version>1.24.0</version>
     <packaging>jar</packaging>
 
     <properties>

@@ -19,6 +19,7 @@ package ca.tweetzy.spawners.commands;
 
 import ca.tweetzy.flight.command.AllowedExecutor;
 import ca.tweetzy.flight.command.Command;
+import ca.tweetzy.flight.command.CommandContext;
 import ca.tweetzy.flight.command.ReturnType;
 import ca.tweetzy.flight.settings.TranslationManager;
 import ca.tweetzy.flight.utils.ChatUtil;
@@ -48,13 +49,13 @@ public final class ButcherCommand extends Command {
 	}
 
 	@Override
-	protected ReturnType execute(CommandSender sender, String... args) {
+	protected ReturnType execute(CommandContext context) {
 		final NamespacedKey key = new NamespacedKey(Spawners.getInstance(), "SpawnersEntityOwner");
 
 		if (Bukkit.getWorlds().isEmpty()) return ReturnType.FAIL;
 
 		int count = 0;
-		if (args.length == 0) {
+		if (!context.hasArg(0)) {
 			for (World world : Bukkit.getWorlds()) {
 				for (LivingEntity livingEntity : world.getLivingEntities()) {
 
@@ -65,12 +66,18 @@ public final class ButcherCommand extends Command {
 				}
 			}
 
-			Common.tell(sender, TranslationManager.string(Translations.REMOVED_ENTITIES_ALL, "total", count));
+			Common.tell(context.getSender(), TranslationManager.string(Translations.REMOVED_ENTITIES_ALL, "total", count));
 			return ReturnType.SUCCESS;
 		}
 
-		EntityType entityType = EntityType.valueOf(args[0].toUpperCase());
-		final World world = args.length == 2 ? Bukkit.getWorld(args[1]) : Bukkit.getWorlds().get(0);
+		EntityType entityType = null;
+		try {
+			entityType = EntityType.valueOf(context.getArg(0).toUpperCase());
+		} catch (IllegalArgumentException e) {
+			// Invalid entity type, will default to PIG
+		}
+		
+		final World world = context.hasArg(1) ? Bukkit.getWorld(context.getArg(1)) : Bukkit.getWorlds().get(0);
 
 		if (entityType == null)
 			entityType = EntityType.PIG;
@@ -98,13 +105,23 @@ public final class ButcherCommand extends Command {
 			}
 
 
-		Common.tell(sender, TranslationManager.string(Translations.REMOVED_ENTITIES_ENTITY, "total", count, "entity_type", ChatUtil.capitalizeFully(entityType)));
+		Common.tell(context.getSender(), TranslationManager.string(Translations.REMOVED_ENTITIES_ENTITY, "total", count, "entity_type", ChatUtil.capitalizeFully(entityType)));
 		return ReturnType.SUCCESS;
 	}
 
 	@Override
-	protected List<String> tab(CommandSender sender, String... args) {
+	protected ReturnType execute(CommandSender sender, String... args) {
+		return execute(new CommandContext(sender, args, getSubCommands().isEmpty() ? "" : getSubCommands().get(0)));
+	}
+
+	@Override
+	protected List<String> tab(CommandContext context) {
 		return null;
+	}
+
+	@Override
+	protected List<String> tab(CommandSender sender, String... args) {
+		return tab(new CommandContext(sender, args, getSubCommands().isEmpty() ? "" : getSubCommands().get(0)));
 	}
 
 	@Override

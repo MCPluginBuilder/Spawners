@@ -19,6 +19,7 @@ package ca.tweetzy.spawners.commands;
 
 import ca.tweetzy.flight.command.AllowedExecutor;
 import ca.tweetzy.flight.command.Command;
+import ca.tweetzy.flight.command.CommandContext;
 import ca.tweetzy.flight.command.ReturnType;
 import ca.tweetzy.spawners.Spawners;
 import ca.tweetzy.spawners.api.spawner.SpawnerUser;
@@ -41,8 +42,9 @@ public final class SpawnersCommand extends Command {
 	}
 
 	@Override
-	protected ReturnType execute(CommandSender sender, String... args) {
-		if (sender instanceof final Player player) {
+	protected ReturnType execute(CommandContext context) {
+		if (context.isPlayer()) {
+			final Player player = context.getPlayer();
 			final SpawnerUser user = Spawners.getPlayerManager().findUser(player);
 
 			if (user != null)
@@ -57,8 +59,18 @@ public final class SpawnersCommand extends Command {
 	}
 
 	@Override
-	protected List<String> tab(CommandSender sender, String... args) {
+	protected ReturnType execute(CommandSender sender, String... args) {
+		return execute(new CommandContext(sender, args, getSubCommands().isEmpty() ? "" : getSubCommands().get(0)));
+	}
+
+	@Override
+	protected List<String> tab(CommandContext context) {
 		return null;
+	}
+
+	@Override
+	protected List<String> tab(CommandSender sender, String... args) {
+		return tab(new CommandContext(sender, args, getSubCommands().isEmpty() ? "" : getSubCommands().get(0)));
 	}
 
 	@Override

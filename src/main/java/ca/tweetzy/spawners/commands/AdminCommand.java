@@ -19,6 +19,7 @@ package ca.tweetzy.spawners.commands;
 
 import ca.tweetzy.flight.command.AllowedExecutor;
 import ca.tweetzy.flight.command.Command;
+import ca.tweetzy.flight.command.CommandContext;
 import ca.tweetzy.flight.command.ReturnType;
 import ca.tweetzy.flight.settings.TranslationManager;
 import ca.tweetzy.flight.utils.Common;
@@ -46,15 +47,17 @@ public final class AdminCommand extends Command {
 	}
 
 	@Override
-	protected ReturnType execute(CommandSender sender, String... args) {
-		if (!(sender instanceof final Player player)) return ReturnType.FAIL;
+	protected ReturnType execute(CommandContext context) {
+		if (!context.isPlayer()) return ReturnType.FAIL;
 
-		if (args.length == 0) {
+		final Player player = context.getPlayer();
+
+		if (!context.hasArg(0)) {
 			Spawners.getGuiManager().showGUI(player, new SpawnersAdminGUI(player));
 			return ReturnType.SUCCESS;
 		}
 
-		switch(args[0]) {
+		switch(context.getArg(0)) {
 			case "bypass":
 				if (!player.getPersistentDataContainer().has(Spawners.getAdminModeKey())) {
 					player.getPersistentDataContainer().set(new NamespacedKey(Spawners.getInstance(), "ADMIN_MODE"), PersistentDataType.BOOLEAN, true);
@@ -70,10 +73,20 @@ public final class AdminCommand extends Command {
 	}
 
 	@Override
-	protected List<String> tab(CommandSender sender, String... args) {
-		if (args.length == 1)
+	protected ReturnType execute(CommandSender sender, String... args) {
+		return execute(new CommandContext(sender, args, getSubCommands().isEmpty() ? "" : getSubCommands().get(0)));
+	}
+
+	@Override
+	protected List<String> tab(CommandContext context) {
+		if (context.hasArg(0) && context.getArgCount() == 1)
 			return List.of("bypass");
 		return null;
+	}
+
+	@Override
+	protected List<String> tab(CommandSender sender, String... args) {
+		return tab(new CommandContext(sender, args, getSubCommands().isEmpty() ? "" : getSubCommands().get(0)));
 	}
 
 	@Override

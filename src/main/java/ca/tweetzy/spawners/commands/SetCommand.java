@@ -19,6 +19,7 @@ package ca.tweetzy.spawners.commands;
 
 import ca.tweetzy.flight.command.AllowedExecutor;
 import ca.tweetzy.flight.command.Command;
+import ca.tweetzy.flight.command.CommandContext;
 import ca.tweetzy.flight.command.ReturnType;
 import ca.tweetzy.flight.comp.enums.CompMaterial;
 import ca.tweetzy.flight.settings.TranslationManager;
@@ -48,8 +49,8 @@ public final class SetCommand extends Command {
 	}
 
 	@Override
-	protected ReturnType execute(CommandSender sender, String... args) {
-		final Player player = (Player) sender;
+	protected ReturnType execute(CommandContext context) {
+		final Player player = context.getPlayer();
 		final Block targetBlock = player.getTargetBlock(null, 25);
 
 		if (targetBlock.getType() != CompMaterial.SPAWNER.parseMaterial()) {
@@ -78,8 +79,18 @@ public final class SetCommand extends Command {
 	}
 
 	@Override
-	protected List<String> tab(CommandSender sender, String... args) {
+	protected ReturnType execute(CommandSender sender, String... args) {
+		return execute(new CommandContext(sender, args, getSubCommands().isEmpty() ? "" : getSubCommands().get(0)));
+	}
+
+	@Override
+	protected List<String> tab(CommandContext context) {
 		return null;
+	}
+
+	@Override
+	protected List<String> tab(CommandSender sender, String... args) {
+		return tab(new CommandContext(sender, args, getSubCommands().isEmpty() ? "" : getSubCommands().get(0)));
 	}
 
 	@Override

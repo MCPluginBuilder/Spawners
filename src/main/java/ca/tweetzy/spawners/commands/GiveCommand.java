@@ -19,6 +19,7 @@ package ca.tweetzy.spawners.commands;
 
 import ca.tweetzy.flight.command.AllowedExecutor;
 import ca.tweetzy.flight.command.Command;
+import ca.tweetzy.flight.command.CommandContext;
 import ca.tweetzy.flight.command.ReturnType;
 import ca.tweetzy.flight.settings.TranslationManager;
 import ca.tweetzy.flight.utils.Common;
@@ -33,7 +34,9 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Date Created: May 04 2022
@@ -48,32 +51,32 @@ public final class GiveCommand extends Command {
 	}
 
 	@Override
-	protected ReturnType execute(CommandSender sender, String... args) {
-		if (args.length == 0) {
-
+	protected ReturnType execute(CommandContext context) {
+		if (!context.hasArg(0)) {
 			return ReturnType.SUCCESS;
 		}
 
-		final boolean isGivingAll = args[0].equals("*");
+		final boolean isGivingAll = context.getArg(0).equals("*");
 
-		final Player target = Bukkit.getPlayerExact(args[0]);
+		final Player target = Bukkit.getPlayerExact(context.getArg(0));
 
 		if (!isGivingAll)
 			if (target == null) {
-				Common.tell(sender, TranslationManager.string(Translations.PLAYER_OFFLINE, "player", args[0]));
+				Common.tell(context.getSender(), TranslationManager.string(Translations.PLAYER_OFFLINE, "player", context.getArg(0)));
 				return ReturnType.FAIL;
 			}
 
 		int amount = 1;
 
-		if (args.length > 1) {
-			if (NumberUtils.isNumber(args[1]))
-				amount = Integer.parseInt(args[1]);
+		if (context.hasArg(1)) {
+			if (NumberUtils.isNumber(context.getArg(1)))
+				amount = Integer.parseInt(context.getArg(1));
 		}
 
 		// check for flags
-		final EntityType entityType = CommandFlag.get(EntityType.class, "entity", EntityType.PIG, args);
-		final String preset = CommandFlag.get(String.class, "preset", null, args);
+		final EntityType entityType = CommandFlag.get(EntityType.class, "entity", EntityType.PIG, context.getArgs().toArray(new String[0]));
+		final String preset = CommandFlag.get(String.class, "preset", null, context.getArgs().toArray(new String[0]));
+		final boolean noOwner = context.getArgs().contains("-noowner");
 
 		Preset presetFound = null;
 
@@ -83,13 +86,35 @@ public final class GiveCommand extends Command {
 
 		if (isGivingAll)
 			for (Player player : Bukkit.getOnlinePlayers()) {
-				final ItemStack spawnerItem = presetFound != null ? SpawnerBuilder.of(player, presetFound).make() : SpawnerBuilder.of(player, entityType).make();
+				SpawnerBuilder builder;
+				if (presetFound != null) {
+					builder = SpawnerBuilder.of(player, presetFound);
+				} else {
+					builder = SpawnerBuilder.of(player, entityType);
+				}
+				
+				if (noOwner) {
+					builder.setNoOwner();
+				}
+				
+				final ItemStack spawnerItem = builder.make();
 
 				for (int i = 0; i < amount; i++)
 					player.getInventory().addItem(spawnerItem);
 			}
 		else {
-			final ItemStack spawnerItem = presetFound != null ? SpawnerBuilder.of(target, presetFound).make() : SpawnerBuilder.of(target, entityType).make();
+			SpawnerBuilder builder;
+			if (presetFound != null) {
+				builder = SpawnerBuilder.of(target, presetFound);
+			} else {
+				builder = SpawnerBuilder.of(target, entityType);
+			}
+			
+			if (noOwner) {
+				builder.setNoOwner();
+			}
+			
+			final ItemStack spawnerItem = builder.make();
 
 			for (int i = 0; i < amount; i++)
 				target.getInventory().addItem(spawnerItem);
@@ -99,8 +124,24 @@ public final class GiveCommand extends Command {
 	}
 
 	@Override
-	protected List<String> tab(CommandSender sender, String... args) {
+	protected ReturnType execute(CommandSender sender, String... args) {
+		return execute(new CommandContext(sender, args, getSubCommands().isEmpty() ? "" : getSubCommands().get(0)));
+	}
+
+	@Override
+	protected List<String> tab(CommandContext context) {
+		if (context.getArgCount() == 0 || context.getArgCount() == 1) {
+			final List<String> completions = new ArrayList<>();
+			completions.add("*");
+			completions.addAll(Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList()));
+			return completions;
+		}
 		return null;
+	}
+
+	@Override
+	protected List<String> tab(CommandSender sender, String... args) {
+		return tab(new CommandContext(sender, args, getSubCommands().isEmpty() ? "" : getSubCommands().get(0)));
 	}
 
 	@Override
@@ -110,7 +151,7 @@ public final class GiveCommand extends Command {
 
 	@Override
 	public String getSyntax() {
-		return "<player/*> [[-preset <presetId>]/[-entity <entityType>]]";
+		return "<player/*> [[-preset <presetId>]/[-entity <entityType>]] [-noowner]";
 	}
 
 	@Override
