@@ -59,6 +59,7 @@ public final class Spawners extends FlightPlugin {
 	private final TweetzyYamlConfig coreConfig = new TweetzyYamlConfig(this, "config.yml");
 
 	public NamespacedKey ADMIN_MODE;
+	public static NamespacedKey STACKED_MOB_COUNT;
 
 
 	private final GuiManager guiManager = new GuiManager(this);
@@ -117,8 +118,10 @@ public final class Spawners extends FlightPlugin {
 		getServer().getPluginManager().registerEvents(new EntityListeners(), this);
 		getServer().getPluginManager().registerEvents(new EggListeners(), this);
 		getServer().getPluginManager().registerEvents(new PlayerListeners(), this);
+		getServer().getPluginManager().registerEvents(new MobSpawnListener(), this);
 
 		ADMIN_MODE = new NamespacedKey(Spawners.getInstance(), "ADMIN_MODE");
+		STACKED_MOB_COUNT = new NamespacedKey(Spawners.getInstance(), "STACKED_MOB_COUNT");
 
 	}
 

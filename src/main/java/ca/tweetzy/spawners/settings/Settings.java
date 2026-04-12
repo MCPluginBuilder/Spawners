@@ -84,6 +84,10 @@ public final class Settings extends FlightSettings {
 	public static final ConfigEntry EXPLOSION_RESETS_OWNER = config.createEntry("explosion.reset owner", true).withComment("If the spawner is dropped by explosion, should the owner be reset?");
 	public static final ConfigEntry EXPLOSION_PREVENT_UNKNOWN_SOURCE = config.createEntry("explosion.prevent unknown source", true).withComment("If the spawner is broken due to an unknown explosion source, should it cancel?");
 
+	public static final ConfigEntry MOB_STACKING_ENABLED = config.createEntry("mob stacking.enabled", true).withComment("If true, mobs spawned from spawners will automatically stack together to reduce entity count");
+	public static final ConfigEntry MOB_STACKING_MAX_SIZE = config.createEntry("mob stacking.max size", 1000).withComment("Maximum number of mobs that can be stacked in a single entity");
+	public static final ConfigEntry MOB_STACKING_MERGE_RADIUS = config.createEntry("mob stacking.merge radius", 10D).withComment("Radius in blocks to search for nearby stacked mobs to merge with");
+	public static final ConfigEntry MOB_STACKING_NAME_FORMAT = config.createEntry("mob stacking.name format", "&e{entity} &fx&e{count}").withComment("Format for stacked mob names. Use {entity} for entity name and {count} for stack count. Example: '{entity} x{count}' or '[{count}] {entity}'");
 
 	public static ConfigEntry GUI_SHARED_ITEMS_BACK_BUTTON = create("gui.shared buttons.back button.item", CompMaterial.DARK_OAK_DOOR.name());
 	public static ConfigEntry GUI_SHARED_ITEMS_EXIT_BUTTON = create("gui.shared buttons.exit button.item", CompMaterial.BARRIER.name());

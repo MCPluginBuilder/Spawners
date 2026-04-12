@@ -130,6 +130,8 @@ public final class BlockListeners implements Listener {
 		final Player player = event.getPlayer();
 		final SpawnerUser spawnerUser = Spawners.getPlayerManager().findUser(player);
 
+		if (hand == null || hand.getType() == CompMaterial.AIR.get() || hand.getAmount() == 0) return;
+		
 		if (!NBT.get(hand, nbt -> (boolean) nbt.hasTag("Spawners:ownerUUID"))) {
 			return;
 		}
