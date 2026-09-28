@@ -168,6 +168,11 @@ public final class Translations extends TranslationManager {
 	public static final TranslationEntry MOB_NAME_NAUTILUS = create("mob names.nautilus", "Nautilus");
 	public static final TranslationEntry MOB_NAME_ZOMBIE_NAUTILUS = create("mob names.zombie nautilus", "Zombie Nautilus");
 
+	public static final TranslationEntry MOB_NAME_PARCHED = create("mob names.parched", "Parched");
+	public static final TranslationEntry MOB_NAME_CAMEL_HUSK = create("mob names.camel husk", "Camel Husk");
+	public static final TranslationEntry MOB_NAME_SULFUR_CUBE = create("mob names.sulfur cube", "Sulfur Cube");
+
+
 	public static final TranslationEntry SPAWNER_NO_OWNER = create("spawner.no owner", "No Owner");
 	public static final TranslationEntry SPAWNER_REQUIRE_SILK = create("spawner.requires silk touch", "&cYou need silk touch to mine spawners!");
 	public static final TranslationEntry SPAWNER_REQUIRE_PICKAXE = create("spawner.requires pickaxe", "&cYou need a pickaxe to mine spawners!");

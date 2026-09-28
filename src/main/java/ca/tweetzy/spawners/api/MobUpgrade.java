@@ -17,9 +17,12 @@
  */
 package ca.tweetzy.spawners.api;
 
+import ca.tweetzy.flight.settings.TranslationManager;
 import ca.tweetzy.spawners.settings.Settings;
+import ca.tweetzy.spawners.settings.Translations;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.bukkit.entity.EntityType;
 
 /**
  * Date Created: May 18 2022
@@ -132,6 +135,13 @@ public enum MobUpgrade {
 	// 1.21.11
 	NAUTILUS(Settings.MOB_CHANGE_NAUTILUS_ENABLED.getBoolean(), Settings.MOB_CHANGE_NAUTILUS_COST.getDouble(), SpawnerMob.NAUTILUS),
 	ZOMBIE_NAUTILUS(Settings.MOB_CHANGE_ZOMBIE_NAUTILUS_ENABLED.getBoolean(), Settings.MOB_CHANGE_ZOMBIE_NAUTILUS_COST.getDouble(), SpawnerMob.ZOMBIE_NAUTILUS),
+
+	// 26.3
+	CAMEL_HUSK(Settings.MOB_CHANGE_CAMEL_HUSK_ENABLED.getBoolean(), Settings.MOB_CHANGE_CAMEL_HUSK_COST.getDouble(), SpawnerMob.CAMEL_HUSK),
+	SULFUR_CUBE(Settings.MOB_CHANGE_SULFUR_CUBE_ENABLED.getBoolean(), Settings.MOB_CHANGE_SULFUR_CUBE_COST.getDouble(), SpawnerMob.SULFUR_CUBE),
+	PARCHED(Settings.MOB_CHANGE_PARCHED_ENABLED.getBoolean(), Settings.MOB_CHANGE_PARCHED_COST.getDouble(), SpawnerMob.PARCHED),
+
+
 	;
 
 	private boolean enabled;

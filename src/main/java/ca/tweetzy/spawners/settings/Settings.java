@@ -327,6 +327,14 @@ public final class Settings extends FlightSettings {
 	public static final ConfigEntry MOB_CHANGE_ZOMBIE_NAUTILUS_ENABLED = config.createEntry("mob change.zombie nautilus.enabled", true).withComment("Should players be able to set their spawner to a zombie nautilus");
 	public static final ConfigEntry MOB_CHANGE_ZOMBIE_NAUTILUS_COST = config.createEntry("mob change.zombie nautilus.cost", 5000D).withComment("The cost to switch the spawner to a zombie nautilus");
 
+	public static final ConfigEntry MOB_CHANGE_CAMEL_HUSK_ENABLED = config.createEntry("mob change.camel husk.enabled", true).withComment("Should players be able to set their spawner to a camel husk");
+	public static final ConfigEntry MOB_CHANGE_CAMEL_HUSK_COST = config.createEntry("mob change.camel husk.cost", 5000D).withComment("The cost to switch the spawner to a camel husk");
+
+	public static final ConfigEntry MOB_CHANGE_PARCHED_ENABLED = config.createEntry("mob change.parched.enabled", true).withComment("Should players be able to set their spawner to a parched");
+	public static final ConfigEntry MOB_CHANGE_PARCHED_COST = config.createEntry("mob change.parched.cost", 5000D).withComment("The cost to switch the spawner to a parched");
+
+	public static final ConfigEntry MOB_CHANGE_SULFUR_CUBE_ENABLED = config.createEntry("mob change.sulfur cube.enabled", true).withComment("Should players be able to set their spawner to a sulfur cube");
+	public static final ConfigEntry MOB_CHANGE_SULFUR_CUBE_COST = config.createEntry("mob change.sulfur cube.cost", 5000D).withComment("The cost to switch the spawner to a sulfur cube");
 
 	@SneakyThrows
 	public static void setup() {
